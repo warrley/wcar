@@ -22,7 +22,7 @@ export const Header = () => {
 
                 {loadingAuth && !signed && 
                     <Link to="/login">
-                        <div className="border-2 rounded-full p-2 border-gray-600">
+                        <div className="border-2 rounded-full p- border-gray-600">
                             <LogIn size={24} color="black"/>
                         </div>
                     </Link>

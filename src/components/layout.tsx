@@ -3,9 +3,11 @@ import { Header } from "./header"
 
 export const Layout = () => {
   return (
-    <>
-        <Header />
-        <Outlet/>
-    </>
+    <div >
+      <Header />
+      <div className=" w-full max-w-7xl px-4 mx-auto">
+        <Outlet />
+      </div>
+    </div>
   )
 }
