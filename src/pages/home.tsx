@@ -11,7 +11,7 @@ export const Home = () => {
       </section>
 
       <h1 className="font-bold text-center mt-6 text-2xl mb-4">
-        New cars and used in all th Brazil
+        New and used cars throughout Brazil
       </h1>
 
       <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
