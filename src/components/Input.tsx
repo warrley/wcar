@@ -11,7 +11,7 @@ type InputProps = {
 
 export const Input = ({ placeholder, type = "text", name, register, errors, rules }: InputProps) => {
     return (
-        <div>
+        <div className="w-full">
             <input
                 className="drop-shadow-lg text-lg w-full py-5 border-2 border-sky-500 rounded-lg h-9 px-3 outline-none"
                 placeholder={placeholder}

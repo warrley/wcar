@@ -51,6 +51,10 @@ export const Login = () => {
 
         <Button label="Acess"/>
       </form>
+
+      <Link to="/register">
+        <p className="text-xl">Don't have an account yet? <b>Sign up</b></p>
+      </Link>
     </div>
   )
 }
