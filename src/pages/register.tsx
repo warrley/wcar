@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom"
+import { Link, replace, useNavigate } from "react-router-dom"
 import { Logo } from "../components/logo"
 import { Input } from "../components/Input"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "../components/Button"
+import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth"
+import { auth } from "../services/firebase"
+import { useEffect } from "react"
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").nonempty("The name fiel is required"),
@@ -15,13 +18,34 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export const Register = () => {
+  const navigate = useNavigate();
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange"
   });
 
+  useEffect(() => {
+      const handleLogout = async () => {
+        await signOut(auth);
+      }
+  
+      handleLogout();
+    }, [])
+
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then(async (user) => {
+        await updateProfile(user.user, {
+        displayName: data.name
+        })
+        
+        console.log("cadastrado");
+        navigate("/dashboard", { replace: true })
+      })
+      .catch((err) => {
+        console.log(err);
+    })
   }
 
   return (
@@ -57,7 +81,7 @@ export const Register = () => {
           register={register}
         />
 
-        <Button label="Acess"/>
+        <Button label="Register"/>
       </form>
 
       <Link to="/login">

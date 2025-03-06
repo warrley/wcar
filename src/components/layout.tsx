@@ -3,7 +3,7 @@ import { Header } from "./header"
 
 export const Layout = () => {
   return (
-    <div >
+    <div className="select-none">
       <Header />
       <div className=" w-full max-w-7xl px-4 mx-auto">
         <Outlet />

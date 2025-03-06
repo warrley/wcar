@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Logo } from "../components/logo"
 import { Input } from "../components/Input"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "../components/Button"
+import { signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { auth } from "../services/firebase"
+import { useEffect } from "react"
 
 const schema = z.object({
   email: z.string().email("Enter a valid email").nonempty("The email field is required"),
@@ -14,13 +17,31 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export const Login = () => {
+  const navigate = useNavigate();
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange"
   });
 
+  useEffect(() => {
+    const handleLogout = async () => {
+      await signOut(auth);
+    }
+
+    handleLogout();
+  }, [])
+
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((user) => {
+        console.log("logado");
+        console.log(user);
+        navigate("/dashboard", {replace: true});
+      })
+      .catch((err) => {
+        console.log(err);
+    })
   }
 
   return (
