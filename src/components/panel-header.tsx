@@ -14,7 +14,7 @@ export const PanelHeader = () => {
                 <Link to="/dashboard/new">Register car</Link>
             </div>
 
-            <button onClick={handleLogout}>Logout</button>
+            <button className="text-white" onClick={handleLogout}>Logout</button>
         </div>
     )
 }

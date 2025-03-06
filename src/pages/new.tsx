@@ -1,15 +1,15 @@
-import { Upload } from "lucide-react"
+import {  Trash2, Upload } from "lucide-react"
 import { PanelHeader } from "../components/panel-header"
 import { z } from "zod"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { v4 as uuidV4 } from 'uuid';
 import { storage } from "../services/firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const schema = z.object({
   name: z.string().nonempty("The name field is required"),
@@ -26,12 +26,20 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+type ImageProps = {
+  uid: string;
+  name: string;
+  previewUrl: string;
+  url: string;
+}
+
 export const New = () => {
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange"
-  })
+  });
+  const [images, setImages] = useState<ImageProps[]>([]);
 
   const onSubmit = (data: FormData) => {
     console.log(data);
@@ -63,9 +71,29 @@ export const New = () => {
     uploadBytes(uploadRef, image)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref).then((donwloadUrl) => {
-          console.log(donwloadUrl);
-        })
+          const Image = {
+            name: uidImage,
+            uid: currentUid,
+            previewUrl: URL.createObjectURL(image),
+            url: donwloadUrl
+          };
+
+          setImages(prev => [...prev, Image])
+        });
     })
+  }
+
+  const handleDeleteImage = async (item: ImageProps) => {
+    const imagePath = `images/${item.uid}/${item.name}`;
+
+    const imageRef = ref(storage, imagePath);
+
+    try {
+      await deleteObject(imageRef);
+      setImages(prev => prev.filter((car) => car.name !== item.name))
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -81,6 +109,19 @@ export const New = () => {
             <input className="h-32 w-full opacity-0 bg-red-500 cursor-pointer" onChange={handleFile} type="file" accept="image/*"/>
           </div>
         </button>
+
+        {images.map(img => (
+          <div key={img.name} className="w-full h-32 flex items-center justify-center relative">
+            <img
+              src={img.previewUrl}
+              className="rounded-lg h-32 w-full object-cover"
+              alt="car photo"
+            />
+            <div className="absolute bg-zinc-900/40 p-4 rounded-full cursor-pointer text-white hover:scale-110 duration-300" onClick={() => handleDeleteImage(img)}>
+              <Trash2 size={28}/>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
