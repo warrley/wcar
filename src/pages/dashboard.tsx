@@ -1,7 +1,9 @@
+import { PanelHeader } from "../components/panel-header"
+
 export const Dasboard = () => {
   return (
     <div>
-      <h1>Dasboard page</h1>
+      <PanelHeader/>
     </div>
   )
 }

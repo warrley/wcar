@@ -8,6 +8,7 @@ import { Button } from "../components/Button"
 import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth"
 import { auth } from "../services/firebase"
 import { useEffect } from "react"
+import { useAuth } from "../context/AuthContext"
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").nonempty("The name fiel is required"),
@@ -18,8 +19,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export const Register = () => {
+  const { handleInfoUser } = useAuth()
   const navigate = useNavigate();
-
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange"
@@ -40,6 +41,11 @@ export const Register = () => {
         displayName: data.name
         })
         
+        handleInfoUser({
+          name: data.name,
+          email: data.email,
+          uid: user.user.uid
+        });
         console.log("cadastrado");
         navigate("/dashboard", { replace: true })
       })
