@@ -1,4 +1,4 @@
-import {  Trash2, Upload } from "lucide-react"
+import { Trash2, Upload } from "lucide-react"
 import { PanelHeader } from "../components/panel-header"
 import { z } from "zod"
 import { useForm } from "react-hook-form";
@@ -8,8 +8,9 @@ import { Button } from "../components/Button";
 import { ChangeEvent, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { v4 as uuidV4 } from 'uuid';
-import { storage } from "../services/firebase";
+import { db, storage } from "../services/firebase";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
 
 const schema = z.object({
   name: z.string().nonempty("The name field is required"),
@@ -40,10 +41,6 @@ export const New = () => {
     mode: "onChange"
   });
   const [images, setImages] = useState<ImageProps[]>([]);
-
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-  }
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -95,6 +92,42 @@ export const New = () => {
       console.log(err);
     }
   }
+
+  const onSubmit = (data: FormData) => {
+    if (images.length < 1) {
+      alert("Send an image of this car");
+      return;
+    };
+
+    const carListImages = images.map(car => ({
+      uid: car.uid,
+      name: car.name,
+      url: car.url
+    }));
+
+    addDoc(collection(db, "cars"), {
+      name: data.name,
+      model: data.model,
+      whatsapp: data.whatsapp,
+      city: data.city,
+      year: data.year,
+      km: data.km,
+      price: data.price,
+      description: data.description,
+      created: new Date(),
+      owner: user?.name,
+      uid: user?.uid,
+      images: carListImages
+    })
+      .then(() => {
+        reset();
+        setImages([]);
+        console.log("cadastrado");
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  };
 
   return (
     <div>
