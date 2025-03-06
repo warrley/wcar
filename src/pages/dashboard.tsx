@@ -57,7 +57,7 @@ export const Dasboard = () => {
       }
     })
 
-    setUserCars(prev => prev.filter(car => car.id !== car.id));
+    setUserCars(prev => prev.filter(c => c.id !== car.id));
   }
 
   return (
