@@ -1,4 +1,4 @@
-import { Link, replace, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Logo } from "../components/logo"
 import { Input } from "../components/Input"
 import { z } from "zod"
