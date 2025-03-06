@@ -1,10 +1,10 @@
 import { LogIn, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Logo } from "./logo";
+import { useAuth } from "../context/AuthContext";
 
 export const Header = () => {
-    const signed = false;
-    const loadingAuth = true;
+    const { loadingAuth, signed } = useAuth();
 
     return (
         <div className="w-full drop-shadow-xl rounded-b-3xl mb-4 bg-white flex items-center justify-center">
@@ -21,7 +21,7 @@ export const Header = () => {
                     </Link>
                 }
 
-                {loadingAuth && !signed && 
+                {!loadingAuth && !signed && 
                     <Link to="/login">
                         <div className="border-2 rounded-full p-2 border-gray-600">
                             <LogIn size={24} color="black"/>
