@@ -2,7 +2,7 @@ import { Circle, Trash2 } from "lucide-react"
 import { CarsProps } from "../context/CarContex"
 import { useState } from "react";
 
-export const CarDashboard = ({ car }: { car: CarsProps }) => {
+export const CarDashboard = ({ car, handleDelete }: { car: CarsProps, handleDelete: (id:string) => void }) => {
     const [loadImg, setLoadImg] = useState<string[]>([]);
     
     const handleImageLoad = (id: string) => {
@@ -11,7 +11,7 @@ export const CarDashboard = ({ car }: { car: CarsProps }) => {
 
     return (
         <section className="bg-white rounded-lg flex flex-col hover:scale-110 duration-300 relative">
-            <div className="absolute right-3 top-3 hover:scale-125 duration-300 cursor-pointer p-3 text-white bg-gray-800/50 rounded-full">
+            <div className="absolute right-3 top-3 hover:scale-125 duration-300 cursor-pointer p-3 text-white bg-gray-800/50 rounded-full" onClick={() => handleDelete(car.id)}>
                 <Trash2 size={26}/>
             </div>
             <div className="w-full h-80 rounded-lg bg-slate-200" style={{ display: loadImg.includes(car.id) ? "none" : "block"}}></div>
