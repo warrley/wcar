@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 import { CarsProps } from "../context/CarContex";
 import { useAuth } from "../context/AuthContext";
-import { db } from "../services/firebase";
+import { db, storage } from "../services/firebase";
+import { deleteObject, ref } from "firebase/storage";
 
 export const Dasboard = () => {
   const [userCars, setUserCars] = useState<CarsProps[]>([]);
@@ -41,10 +42,22 @@ export const Dasboard = () => {
 
   }, [user])
   
-  const handleDelete = async (id: string) => {
-    const docRef = doc(db, "cars", id);
+  const handleDelete = async (car: CarsProps) => {
+    const docRef = doc(db, "cars", car.id);
     await deleteDoc(docRef);
-    setUserCars(prev => prev.filter(car => car.id !== id))
+
+    car.images.map(async (img) => {
+      const imagePath = `image/${img.uid}/${img.name}`;
+      const imageRef = ref(storage, imagePath);
+
+      try {
+        await deleteObject(imageRef);
+      } catch {
+        console.log("erro ao excluir");
+      }
+    })
+
+    setUserCars(prev => prev.filter(car => car.id !== car.id));
   }
 
   return (
