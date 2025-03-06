@@ -88,7 +88,8 @@ export const New = () => {
     try {
       await deleteObject(imageRef);
       setImages(prev => prev.filter((car) => car.name !== item.name))
-    } catch(err) {
+    } catch (err) {
+      console.log("ERRO AO DELETAR")
       console.log(err);
     }
   }
@@ -125,6 +126,7 @@ export const New = () => {
         console.log("cadastrado");
       })
       .catch((err) => {
+        console.log("ERRO AO CADASTRAR:")
         console.log(err);
       })
   };

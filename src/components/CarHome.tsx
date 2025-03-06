@@ -1,22 +1,38 @@
 import { Circle } from "lucide-react"
+import { ImageProps } from "../pages/home";
+import { Link } from "react-router-dom";
 
-export const CarHome = () => {
+interface CarProps{
+  name: string;
+  id: string;
+  year: string | number;
+  km: string | number;
+  city: string;
+  price: string | number;
+  images: ImageProps[];
+}
+
+export const CarHome = ({ name, id, year, km, city, price, images }: CarProps) => {
     return (
+      <Link to={`/car/:${id}`}>
         <section className="bg-white rounded-lg flex flex-col hover:scale-110 duration-300">
-          <img className="rounded-lg" src="https://revistafullpower.com.br/wp-content/uploads/2019/03/au01.jpg" alt="" />
+          <img className="rounded-lg h-80 object-cover" src={images[0].url} alt={name} />
 
           <div className="p-3">
-            <p className="font-bold text-xl">Audi R8</p>
+          <p className="font-bold text-xl">{name}</p>
 
             <div className="flex items-center gap-1 mb-4">
-              <p>2016/2017 </p>
+            <p>{year}</p>
                 <Circle size={5} fill="currentColor"/>
-              <p>2699km</p>
+            <p>{km}</p>
             </div>
 
-            <h2 className="text-xl font-semibold">R$239.000</h2>
-          </div>
-            <p className="p-2 border-t">São Paulo - SP</p>
+          <h2 className="text-xl font-semibold">
+            R$ {price}
+          </h2>
+        </div>
+        <p className="p-2 border-t">{city}</p>
         </section>
+      </Link>
     )
 }
