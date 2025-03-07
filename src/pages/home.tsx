@@ -49,13 +49,13 @@ export const Home = () => {
     <div>
       <form className="bg-white drop-shadow-lg p-4 rounded-lg w-full max-w-3xl mx-auto flex items-center justify-center gap-2" onSubmit={(e) => { e.preventDefault(); handleSearch; }}>
         <input
-          className="drop-shadow-lg text-lg w-full py-5 border-2 border-sky-500 rounded-lg h-9 px-3 outline-none"
+          className="drop-shadow-lg flex-[2] text-lg w-full py-5 border-2 border-sky-500 rounded-lg h-9 px-3 outline-none"
           placeholder="Enter a car..."
           value={input}
           onChange={e => setInput(e.target.value)}
         />
         <button
-          className="drop-shadow-lg w-full bg-sky-500 h-9 border-2 border-sky-600 hover:bg-sky-600 duration-300 py-5 flex items-center justify-center rounded-lg text-white text-lg font-medium"
+          className="drop-shadow-lg flex-1 w-full bg-sky-500 h-9 border-2 border-sky-600 hover:bg-sky-600 duration-300 py-5 flex items-center justify-center rounded-lg text-white text-lg font-medium"
           onClick={handleSearch}
           type="submit"
         >
