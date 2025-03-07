@@ -4,7 +4,9 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../services/firebase";
 
 type CarContexData = {
-    cars: CarsProps[]
+  cars: CarsProps[];
+  setCars: (car: CarsProps[]) => void;
+  loadCars: () => void;
 }
 
 export interface CarsProps{
@@ -28,40 +30,40 @@ export const CarContext = createContext({} as CarContexData);
 export const useCar = () => useContext(CarContext);
 
 export const CarProvider = ({ children }: { children: ReactNode }) => {
-    const [cars, setCars] = useState<CarsProps[]>([]);
-    
-      useEffect(() => {
-        const loadCars = async () => {
-          const carsRef = collection(db, "cars");
-          const queryRef = query(carsRef, orderBy("created", "desc"));
-    
-          getDocs(queryRef)
-            .then((snapshot) => {
-              let carList = [] as CarsProps[];
-              snapshot.forEach(doc => {
-                carList.push({
-                  id: doc.id,
-                  name: doc.data().name,
-                  year: doc.data().year,
-                  km: doc.data().km,
-                  city: doc.data().city,
-                  price: doc.data().price,
-                  images: doc.data().images,
-                  uid: doc.data().uid
-                })
-              })
-    
-              setCars(carList);
-            })
-        };
-    
-        loadCars();
-    
-      },[])
+  const [cars, setCars] = useState<CarsProps[]>([]);
+  
+  useEffect(() => {
+    loadCars();
 
-    return (
-        <CarContext.Provider value={{ cars }}>
-            { children }
-        </CarContext.Provider>
-    )
-}
+  }, [])
+  
+  const loadCars = async () => {
+    const carsRef = collection(db, "cars");
+    const queryRef = query(carsRef, orderBy("created", "desc"));
+
+    getDocs(queryRef)
+      .then((snapshot) => {
+        let carList = [] as CarsProps[];
+        snapshot.forEach(doc => {
+          carList.push({
+            id: doc.id,
+            name: doc.data().name,
+            year: doc.data().year,
+            km: doc.data().km,
+            city: doc.data().city,
+            price: doc.data().price,
+            images: doc.data().images,
+            uid: doc.data().uid
+          })
+        })
+
+        setCars(carList);
+      })
+  };
+
+  return (
+    <CarContext.Provider value={{ cars, setCars, loadCars }}>
+      {children}
+    </CarContext.Provider>
+  );
+};
