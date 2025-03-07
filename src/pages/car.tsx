@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { CarsProps } from "../context/CarContex";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
@@ -18,6 +18,7 @@ export const CarDetail = () => {
   const { id } = useParams();
   const [car, setCar] = useState<CarData>();
   const [slider, setSlider] = useState<number>(2);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCar = async () => {
@@ -26,6 +27,11 @@ export const CarDetail = () => {
       const docRef = doc(db, "cars", id);
       getDoc(docRef)
         .then((snapshot) => {
+
+          if (!snapshot.data()) {  
+            navigate("/");
+          }
+          
           setCar({
             ...snapshot.data() as CarData,
             id: snapshot.id
@@ -103,7 +109,7 @@ export const CarDetail = () => {
         <strong>Phone / Whatsapp</strong>
         <p>{car?.whatsapp}</p>
 
-        <a className="bg-green-500 w-full text-center flex items-cetne justify-center gap-2 py-2 rounded-lg text-xl font-medium cursor-pointer text-white" href="">Talk to the seller <MessageCircle/></a>
+        <a className="bg-green-500 w-full text-center flex items-cetne justify-center gap-2 py-2 rounded-lg text-xl font-medium cursor-pointer text-white" target="_blank" href={`https://api.whatsapp.com/send?phone=55${car?.whatsapp}&text=Hi, i want more informations about this ${car?.name}`}>Talk to the seller <MessageCircle/></a>
       </div>
     </div>
   )
