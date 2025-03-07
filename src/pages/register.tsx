@@ -9,6 +9,7 @@ import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase
 import { auth } from "../services/firebase"
 import { useEffect } from "react"
 import { useAuth } from "../context/AuthContext"
+import toast from "react-hot-toast"
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").nonempty("The name fiel is required"),
@@ -46,7 +47,7 @@ export const Register = () => {
           email: data.email,
           uid: user.user.uid
         });
-        console.log("cadastrado");
+        toast.success("Welcome to WCar");
         navigate("/dashboard", { replace: true })
       })
       .catch((err) => {

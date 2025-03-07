@@ -11,6 +11,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { db, storage } from "../services/firebase";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 const schema = z.object({
   name: z.string().nonempty("The name field is required"),
@@ -96,7 +97,7 @@ export const New = () => {
 
   const onSubmit = (data: FormData) => {
     if (images.length < 1) {
-      alert("Send an image of this car");
+      toast.error("⚠️ Send an image of this car");
       return;
     };
 
@@ -123,10 +124,10 @@ export const New = () => {
       .then(() => {
         reset();
         setImages([]);
-        console.log("cadastrado");
+        toast.success("Car registered successfully");
       })
       .catch((err) => {
-        console.log("ERRO AO CADASTRAR:")
+        toast.success("Error registering the car")
         console.log(err);
       })
   };

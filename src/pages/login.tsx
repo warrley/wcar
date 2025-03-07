@@ -8,6 +8,7 @@ import { Button } from "../components/Button"
 import { signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { auth } from "../services/firebase"
 import { useEffect } from "react"
+import toast from "react-hot-toast"
 
 const schema = z.object({
   email: z.string().email("Enter a valid email").nonempty("The email field is required"),
@@ -37,10 +38,12 @@ export const Login = () => {
       .then((user) => {
         console.log("logado");
         console.log(user);
+        toast.success("Successfully logged in");
         navigate("/dashboard", {replace: true});
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Error logging in");
     })
   }
 
