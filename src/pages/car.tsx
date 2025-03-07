@@ -4,6 +4,7 @@ import { CarsProps } from "../context/CarContex";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { MessageCircle } from "lucide-react";
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 type CarData = CarsProps & {
   model: string;
@@ -16,6 +17,7 @@ type CarData = CarsProps & {
 export const CarDetail = () => {
   const { id } = useParams();
   const [car, setCar] = useState<CarData>();
+  const [slider, setSlider] = useState<number>(2);
 
   useEffect(() => {
     const loadCar = async () => {
@@ -37,10 +39,41 @@ export const CarDetail = () => {
     loadCar();
   }, [id])
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 720) {
+        setSlider(1);
+      } else {
+        setSlider(2)
+      }
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  },[])
+
   return (
     <div>
       <div>
-        {/* //images */}
+        <Swiper
+          slidesPerView={slider}
+          pagination={{ clickable: true }}
+          navigation
+        >
+          {car?.images.map(img => (
+            <SwiperSlide key={img.name}>
+              <img
+                src={img.url}
+                className="w-full h-96 object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <div className="w-full bg-white rounded-lg p-6 my-4">
         <div className="flex flex-col sm:flex-row mb-4 items-center justify-between">
