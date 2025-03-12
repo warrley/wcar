@@ -1,4 +1,4 @@
-import { Circle } from "lucide-react"
+import { Circle, Target } from "lucide-react"
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { CarsProps } from "../context/CarContex";
@@ -12,7 +12,7 @@ export const CarHome = ({ car }: {car: CarsProps} ) => {
   }
 
   return (
-    <Link to={`/car/${car.id}`}>
+    <Link to={`/car/${car.id}`} target="_blank">
       <section className="bg-white rounded-lg flex flex-col hover:scale-110 duration-300 cursor-pointer">
         <div className="w-full h-80 rounded-lg bg-slate-200" style={{ display: loadImg.includes(car.id) ? "none" : "block"}}></div>
         <img className="rounded-lg h-80 object-cover" style={{ display: loadImg.includes(car.id) ? "block" : "none"}} src={car.images[0].url} alt={car.name} onLoad={() => handleImageLoad(car.id)}/>
